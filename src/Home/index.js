@@ -33,8 +33,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 export const Home = () => {
     const [data, setData] = useState();
-
-
+    const [last, setLast] = useState();
+    const totalSlots = 4;
 
     useEffect(()=>{
         async function getData() {
@@ -45,6 +45,17 @@ export const Home = () => {
         getData()
         .then(res => res.json())
         .then(res => setData(res))
+    },[])
+
+    useEffect(()=>{
+        async function getData() {
+            return fetch('https://iot-project.herokuapp.com/slots/last', {
+                method: 'GET'
+            })
+        } 
+        getData()
+        .then(res => res.json())
+        .then(res => setLast(res))
     },[])
 
     return data? (
@@ -73,8 +84,8 @@ export const Home = () => {
             <div style={{ width: 200, height: 200, margin: '0 auto', paddingTop: 16 }}>
                 <CircularProgressbar
                 width={100}
-                value={75}
-                text={'75%'}
+                value={(last[0].slots/totalSlots)*100}
+                text={`${(last[0].slots/totalSlots)*100}%`}
                 circleRatio={0.7} /* Make the circle only 0.7 of the full diameter */
                 styles={{
                     trail: {
